@@ -74,7 +74,7 @@ function makeModifiedTypeChecker(origChecker) {
 
         // If video type is in disallowedTypes, say we don't support them
         if (disallowedTypes.some((disType) => inputType.includes(disType))) {
-            return ''
+            return '';
         }
 
         var match = /framerate=(\d+)/.exec(inputType);
