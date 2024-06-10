@@ -1,12 +1,12 @@
 {
     "license": "MIT",
     "dependencies": {
-        "http-server": "^0.12.3",
-        "prettier": "^2.1.2"
+        "http-server": "^14.1.1",
+        "prettier": "^3.3.1"
     },
     "scripts": {
         "start": "http-server -c 5 -p 8000",
-        "pretty": "prettier ./**/*.js --write"
+        "pretty": "prettier -wu --log-level warn './**/*'"
     },
     "prettier": {
         "tabWidth": 4,

@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     ...acc,
                     ...node.querySelectorAll('a[href^="/p/"]'),
                 ],
-                []
+                [],
             )
             .forEach((node) => {
                 const overlayLink = document.createElement('a');
@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         evt.preventDefault();
                         evt.stopPropagation();
                     },
-                    false
+                    false,
                 );
             });
 
@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     ...acc,
                     ...node.querySelectorAll('.glyphsSpriteGrey_Close'),
                 ],
-                []
+                [],
             )
             .forEach((node) => {
                 if (
