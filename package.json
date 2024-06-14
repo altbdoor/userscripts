@@ -6,7 +6,7 @@
     },
     "scripts": {
         "start": "http-server -c 5 -p 8000",
-        "pretty": "prettier -wu --log-level warn './**/*'"
+        "pretty": "prettier -wu --log-level warn \"**/*\""
     },
     "prettier": {
         "tabWidth": 4,
