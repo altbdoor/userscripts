@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.3
+// @version     1.4
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -15,10 +15,12 @@
 const originalFetch = unsafeWindow.fetch;
 
 unsafeWindow.fetch = async (url, config) => {
-    const gptModel = await GM.getValue('gptModel', '');
+    const gptModel = await GM.getValue(
+        'gptModel',
+        'text-davinci-002-render-sha',
+    );
 
     if (
-        gptModel !== '' &&
         gptModel !== 'auto' &&
         url.includes('/backend-api/conversation') &&
         config.method === 'POST'
@@ -30,7 +32,7 @@ unsafeWindow.fetch = async (url, config) => {
                 model: gptModel,
             });
         } catch (error) {
-            console.error('Error parsing JSON body:', error);
+            console.error('[force-gpt3] Error parsing JSON body:', error);
         }
     }
 
