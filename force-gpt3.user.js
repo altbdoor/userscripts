@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <select>
             <option value="auto">Auto</option>
             <option value="text-davinci-002-render-sha">GPT 3.5</option>
+            <option value="gpt-4o-mini">GPT 4o mini</option>
         </select>
     `;
     document.body.appendChild(toggleContainer);
