@@ -4,14 +4,14 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.7
+// @version     1.8
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // ==/UserScript==
 
-// safari does not have unsafeWindow
+// fallback for missing unsafeWindow
 let windowRef = window;
 
 try {
@@ -86,7 +86,7 @@ async function mainRunner() {
     select.value = selectVal;
 }
 
-// safari userscripts might have triggered DOM ready earlier
+// userscripts might have triggered DOM ready earlier
 // https://developer.apple.com/forums/thread/651215
 if (document.readyState !== "loading") {
     mainRunner();
