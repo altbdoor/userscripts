@@ -4,17 +4,25 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.5
+// @version     1.6
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // ==/UserScript==
 
-// https://blog.logrocket.com/intercepting-javascript-fetch-api-requests-responses/
-const originalFetch = unsafeWindow.fetch;
+// safari does not have unsafeWindow
+let windowRef = window;
 
-unsafeWindow.fetch = async (url, config) => {
+try {
+    windowRef = unsafeWindow
+}
+catch (e) {}
+
+// https://blog.logrocket.com/intercepting-javascript-fetch-api-requests-responses/
+const originalFetch = windowRef.fetch;
+
+windowRef.fetch = async (url, config) => {
     const gptModel = await GM.getValue(
         'gptModel',
         'text-davinci-002-render-sha',
