@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.6
+// @version     1.7
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -15,23 +15,22 @@
 let windowRef = window;
 
 try {
-    windowRef = unsafeWindow
-}
-catch (e) {}
+    windowRef = unsafeWindow;
+} catch (e) {}
 
 // https://blog.logrocket.com/intercepting-javascript-fetch-api-requests-responses/
 const originalFetch = windowRef.fetch;
 
 windowRef.fetch = async (url, config) => {
     const gptModel = await GM.getValue(
-        'gptModel',
-        'text-davinci-002-render-sha',
+        "gptModel",
+        "text-davinci-002-render-sha",
     );
 
     if (
-        gptModel !== 'auto' &&
-        url.includes('/backend-api/conversation') &&
-        config.method === 'POST'
+        gptModel !== "auto" &&
+        url.includes("/backend-api/conversation") &&
+        config.method === "POST"
     ) {
         try {
             const body = JSON.parse(config.body);
@@ -40,7 +39,7 @@ windowRef.fetch = async (url, config) => {
                 model: gptModel,
             });
         } catch (error) {
-            console.error('[force-gpt3] Error parsing JSON body:', error);
+            console.error("[force-gpt3] Error parsing JSON body:", error);
         }
     }
 
@@ -48,9 +47,9 @@ windowRef.fetch = async (url, config) => {
     return response;
 };
 
-document.addEventListener('DOMContentLoaded', async () => {
+async function mainRunner() {
     // add style
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.innerHTML = `
         .toggleContainer {
             position: absolute; right: 12rem; top: 0.5rem;
@@ -62,8 +61,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.head.append(style);
 
     // add dropdown
-    const toggleContainer = document.createElement('div');
-    toggleContainer.classList.add('toggleContainer');
+    const toggleContainer = document.createElement("div");
+    toggleContainer.classList.add("toggleContainer");
 
     toggleContainer.innerHTML = `
         <select>
@@ -74,15 +73,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     `;
     document.body.appendChild(toggleContainer);
 
-    const select = toggleContainer.querySelector('select');
+    const select = toggleContainer.querySelector("select");
     select.onchange = (evt) => {
-        GM.setValue('gptModel', evt.target.value);
+        GM.setValue("gptModel", evt.target.value);
         console.log(`[force-gpt3] changing model to ${evt.target.value}`);
     };
 
     const selectVal = await GM.getValue(
-        'gptModel',
-        'text-davinci-002-render-sha',
+        "gptModel",
+        "text-davinci-002-render-sha",
     );
     select.value = selectVal;
-});
+}
+
+// safari userscripts might have triggered DOM ready earlier
+// https://developer.apple.com/forums/thread/651215
+if (document.readyState !== "loading") {
+    mainRunner();
+} else {
+    document.addEventListener("DOMContentLoaded", mainRunner);
+}
