@@ -10,10 +10,10 @@
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/glassdoor-bypass.user.js
 // ==/UserScript==
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     document.body.onscroll = null;
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.innerHTML = `
         body { height: auto !important; overflow: auto !important; }
         #ContentWallHardsell { display: none !important; }

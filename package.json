@@ -10,8 +10,6 @@
         "pretty": "prettier -wu --log-level warn \"**/*\""
     },
     "prettier": {
-        "tabWidth": 4,
-        "semi": true,
-        "singleQuote": true
+        "tabWidth": 4
     }
 }

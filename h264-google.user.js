@@ -37,7 +37,7 @@
 
 function override() {
     // Override video element canPlayType() function
-    var videoElem = document.createElement('video');
+    var videoElem = document.createElement("video");
     var origCanPlayType = videoElem.canPlayType.bind(videoElem);
     videoElem.__proto__.canPlayType = makeModifiedTypeChecker(origCanPlayType);
 
@@ -67,19 +67,19 @@ function makeModifiedTypeChecker(origChecker) {
      */
     function checkWrapper(inputType) {
         if (inputType === undefined) {
-            return '';
+            return "";
         }
 
-        var disallowedTypes = ['webm', 'vp8', 'vp9', 'vp09', 'av01'];
+        var disallowedTypes = ["webm", "vp8", "vp9", "vp09", "av01"];
 
         // If video type is in disallowedTypes, say we don't support them
         if (disallowedTypes.some((disType) => inputType.includes(disType))) {
-            return '';
+            return "";
         }
 
         var match = /framerate=(\d+)/.exec(inputType);
         if (match && parseInt(match[1], 10) > 30) {
-            return '';
+            return "";
         }
 
         // Otherwise, ask the browser

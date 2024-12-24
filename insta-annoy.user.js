@@ -21,10 +21,10 @@ body { overflow-y: auto !important }
 }
 `);
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", () => {
     const observer = new MutationObserver((mutationsList, observer) => {
         const addedNodes = mutationsList
-            .filter((node) => node.type == 'childList')
+            .filter((node) => node.type == "childList")
             .filter((node) => node.addedNodes.length > 0)
             .map((node) => [...node.addedNodes])
             .flat(1);
@@ -38,14 +38,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 [],
             )
             .forEach((node) => {
-                const overlayLink = document.createElement('a');
+                const overlayLink = document.createElement("a");
                 overlayLink.href = node.href;
-                overlayLink.classList.add('__patch__overlay-link');
+                overlayLink.classList.add("__patch__overlay-link");
                 node.parentNode.appendChild(overlayLink);
 
                 node.onclick = null;
                 node.addEventListener(
-                    'click',
+                    "click",
                     (evt) => {
                         evt.preventDefault();
                         evt.stopPropagation();
@@ -58,18 +58,18 @@ window.addEventListener('DOMContentLoaded', () => {
             .reduce(
                 (acc, node) => [
                     ...acc,
-                    ...node.querySelectorAll('.glyphsSpriteGrey_Close'),
+                    ...node.querySelectorAll(".glyphsSpriteGrey_Close"),
                 ],
                 [],
             )
             .forEach((node) => {
                 if (
                     node.parentNode &&
-                    node.parentNode.nodeName.toLowerCase() == 'button' &&
+                    node.parentNode.nodeName.toLowerCase() == "button" &&
                     node.parentNode.parentNode &&
-                    node.parentNode.parentNode.style.width == '100%'
+                    node.parentNode.parentNode.style.width == "100%"
                 ) {
-                    node.parentNode.parentNode.style.display = 'none';
+                    node.parentNode.parentNode.style.display = "none";
                 }
             });
     });
