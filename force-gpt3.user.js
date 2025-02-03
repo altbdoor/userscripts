@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.9
+// @version     1.10
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -68,8 +68,9 @@ async function mainRunner() {
     toggleContainer.innerHTML = `
         <select>
             <option value="auto">Auto</option>
-            <option value="text-davinci-002-render-sha">GPT 3.5</option>
-            <option value="gpt-4o-mini">GPT 4o mini</option>
+            <option value="text-davinci-002-render-sha">3.5</option>
+            <option value="gpt-4o-mini">4o mini</option>
+            <option value="o3-mini">o3 mini</option>
         </select>
     `;
     document.body.appendChild(toggleContainer);
