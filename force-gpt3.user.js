@@ -9,6 +9,7 @@
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
+// @icon        https://www.google.com/s2/favicons?sz=256&domain=chatgpt.com
 // ==/UserScript==
 
 // fallback for missing unsafeWindow
