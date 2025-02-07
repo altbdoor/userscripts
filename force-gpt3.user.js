@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.10
+// @version     1.11
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -71,6 +71,7 @@ async function mainRunner() {
             <option value="auto">Auto</option>
             <option value="text-davinci-002-render-sha">3.5</option>
             <option value="gpt-4o-mini">4o mini</option>
+            <option value="gpt-4o">4o</option>
             <option value="o3-mini">o3 mini</option>
         </select>
     `;
