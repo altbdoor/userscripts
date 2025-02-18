@@ -3,7 +3,7 @@
     "license": "MIT",
     "dependencies": {
         "http-server": "^14.1.1",
-        "prettier": "^3.4.2"
+        "prettier": "^3.5.1"
     },
     "scripts": {
         "start": "http-server -c 5 -p 8000",

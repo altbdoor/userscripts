@@ -27,7 +27,7 @@ windowRef.fetch = async (url, config) => {
         "gptModel",
         "text-davinci-002-render-sha",
     );
-    const fixedUrl = typeof url === 'string' ? url : url.toString();
+    const fixedUrl = typeof url === "string" ? url : url.toString();
 
     if (
         gptModel !== "auto" &&
