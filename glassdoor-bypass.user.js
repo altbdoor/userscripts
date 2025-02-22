@@ -11,12 +11,12 @@
 // ==/UserScript==
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.onscroll = null;
+  document.body.onscroll = null;
 
-    const style = document.createElement("style");
-    style.innerHTML = `
-        body { height: auto !important; overflow: auto !important; }
-        #ContentWallHardsell { display: none !important; }
-    `;
-    document.head.append(style);
+  const style = document.createElement("style");
+  style.innerHTML = `
+    body { height: auto !important; overflow: auto !important; }
+    #ContentWallHardsell { display: none !important; }
+  `;
+  document.head.append(style);
 });

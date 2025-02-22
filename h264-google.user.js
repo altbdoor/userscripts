@@ -36,57 +36,57 @@
  */
 
 function override() {
-    // Override video element canPlayType() function
-    var videoElem = document.createElement("video");
-    var origCanPlayType = videoElem.canPlayType.bind(videoElem);
-    videoElem.__proto__.canPlayType = makeModifiedTypeChecker(origCanPlayType);
+  // Override video element canPlayType() function
+  var videoElem = document.createElement("video");
+  var origCanPlayType = videoElem.canPlayType.bind(videoElem);
+  videoElem.__proto__.canPlayType = makeModifiedTypeChecker(origCanPlayType);
 
-    // Override media source extension isTypeSupported() function
-    var mse = window.MediaSource;
-    // Check for MSE support before use
-    if (mse === undefined) return;
-    var origIsTypeSupported = mse.isTypeSupported.bind(mse);
-    mse.isTypeSupported = makeModifiedTypeChecker(origIsTypeSupported);
+  // Override media source extension isTypeSupported() function
+  var mse = window.MediaSource;
+  // Check for MSE support before use
+  if (mse === undefined) return;
+  var origIsTypeSupported = mse.isTypeSupported.bind(mse);
+  mse.isTypeSupported = makeModifiedTypeChecker(origIsTypeSupported);
 
-    // unsafeWindow.applesauce = 1
-    // console.log('heyyyy', unsafeWindow)
-    // var origGetUserMedia = unsafeWindow.navigator.mediaDevices.getUserMedia.bind(unsafeWindow.navigator.mediaDevices);
-    // unsafeWindow.navigator.mediaDevices.getUserMedia = function (constraints) {
-    //     console.log('aaaaaaaaaaaaaaa', constraints)
-    //     return origGetUserMedia(constraints);
-    //     // origUserMedia(...arguments)
-    // }
+  // unsafeWindow.applesauce = 1
+  // console.log('heyyyy', unsafeWindow)
+  // var origGetUserMedia = unsafeWindow.navigator.mediaDevices.getUserMedia.bind(unsafeWindow.navigator.mediaDevices);
+  // unsafeWindow.navigator.mediaDevices.getUserMedia = function (constraints) {
+  //     console.log('aaaaaaaaaaaaaaa', constraints)
+  //     return origGetUserMedia(constraints);
+  //     // origUserMedia(...arguments)
+  // }
 }
 
 // return a custom MIME type checker that can defer to the original function
 function makeModifiedTypeChecker(origChecker) {
-    // Check if a video type is allowed
-    /**
-     * @param {string} inputType
-     * @returns {boolean}
-     */
-    function checkWrapper(inputType) {
-        if (inputType === undefined) {
-            return "";
-        }
-
-        var disallowedTypes = ["webm", "vp8", "vp9", "vp09", "av01"];
-
-        // If video type is in disallowedTypes, say we don't support them
-        if (disallowedTypes.some((disType) => inputType.includes(disType))) {
-            return "";
-        }
-
-        var match = /framerate=(\d+)/.exec(inputType);
-        if (match && parseInt(match[1], 10) > 30) {
-            return "";
-        }
-
-        // Otherwise, ask the browser
-        return origChecker(inputType);
+  // Check if a video type is allowed
+  /**
+   * @param {string} inputType
+   * @returns {boolean}
+   */
+  function checkWrapper(inputType) {
+    if (inputType === undefined) {
+      return "";
     }
 
-    return checkWrapper;
+    var disallowedTypes = ["webm", "vp8", "vp9", "vp09", "av01"];
+
+    // If video type is in disallowedTypes, say we don't support them
+    if (disallowedTypes.some((disType) => inputType.includes(disType))) {
+      return "";
+    }
+
+    var match = /framerate=(\d+)/.exec(inputType);
+    if (match && parseInt(match[1], 10) > 30) {
+      return "";
+    }
+
+    // Otherwise, ask the browser
+    return origChecker(inputType);
+  }
+
+  return checkWrapper;
 }
 
 override();

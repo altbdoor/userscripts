@@ -1,15 +1,12 @@
 {
-    "name": "userscripts",
-    "license": "MIT",
-    "dependencies": {
-        "http-server": "^14.1.1",
-        "prettier": "^3.5.1"
-    },
-    "scripts": {
-        "start": "http-server -c 5 -p 8000",
-        "pretty": "prettier -wu --log-level warn \"**/*\""
-    },
-    "prettier": {
-        "tabWidth": 4
-    }
+  "name": "userscripts",
+  "license": "MIT",
+  "dependencies": {
+    "@types/tampermonkey": "^5.0.4",
+    "prettier": "^3.5.2"
+  },
+  "scripts": {
+    "start": "npx -y http-server@^14 -c 5 -p 8000",
+    "pretty": "prettier -wu --log-level warn \"**/*\""
+  }
 }

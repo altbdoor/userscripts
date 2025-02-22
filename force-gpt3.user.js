@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.11
+// @version     1.12
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -12,88 +12,94 @@
 // @icon        https://www.google.com/s2/favicons?sz=256&domain=chatgpt.com
 // ==/UserScript==
 
+// @ts-check
+/// <reference types="@types/tampermonkey" />
+
 // fallback for missing unsafeWindow
+/** @type {typeof unsafeWindow | Window} */
 let windowRef = window;
 
 try {
-    windowRef = unsafeWindow;
+  windowRef = unsafeWindow;
 } catch (e) {}
 
 // https://blog.logrocket.com/intercepting-javascript-fetch-api-requests-responses/
 const originalFetch = windowRef.fetch;
 
+/** @type {(...args: Parameters<typeof fetch>) => ReturnType<typeof fetch>} */
 windowRef.fetch = async (url, config) => {
-    const gptModel = await GM.getValue(
-        "gptModel",
-        "text-davinci-002-render-sha",
-    );
-    const fixedUrl = typeof url === "string" ? url : url.toString();
+  const gptModel = await GM.getValue("gptModel", "text-davinci-002-render-sha");
+  const fixedUrl = typeof url === "string" ? url : url.toString();
 
-    if (
-        gptModel !== "auto" &&
-        fixedUrl.includes("/backend-api/conversation") &&
-        config.method === "POST"
-    ) {
-        try {
-            const body = JSON.parse(config.body);
-            config.body = JSON.stringify({
-                ...body,
-                model: gptModel,
-            });
-        } catch (error) {
-            console.error("[force-gpt3] Error parsing JSON body:", error);
-        }
+  if (
+    gptModel !== "auto" &&
+    fixedUrl.includes("/backend-api/conversation") &&
+    config?.method === "POST"
+  ) {
+    try {
+      const body = JSON.parse(config.body?.toString() || "{}");
+      config.body = JSON.stringify({
+        ...body,
+        model: gptModel,
+      });
+    } catch (error) {
+      console.error("[force-gpt3] Error parsing JSON body:", error);
     }
+  }
 
-    const response = await originalFetch(url, config);
-    return response;
+  const response = await originalFetch(url, config);
+  return response;
 };
 
 async function mainRunner() {
-    // add style
-    const style = document.createElement("style");
-    style.innerHTML = `
-        .toggleContainer {
-            position: absolute; right: 12rem; top: 0.5rem;
-        }
-        .toggleContainer select {
-            border-radius: 9999px;
-        }
-    `;
-    document.head.append(style);
+  // add style
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .toggleContainer {
+      position: absolute; right: 12rem; top: 0.5rem;
+    }
+    .toggleContainer select {
+      border-radius: 9999px;
+    }
+  `;
+  document.head.append(style);
 
-    // add dropdown
-    const toggleContainer = document.createElement("div");
-    toggleContainer.classList.add("toggleContainer");
+  // add dropdown
+  const toggleContainer = document.createElement("div");
+  toggleContainer.classList.add("toggleContainer");
 
-    toggleContainer.innerHTML = `
-        <select>
-            <option value="auto">Auto</option>
-            <option value="text-davinci-002-render-sha">3.5</option>
-            <option value="gpt-4o-mini">4o mini</option>
-            <option value="gpt-4o">4o</option>
-            <option value="o3-mini">o3 mini</option>
-        </select>
-    `;
-    document.body.appendChild(toggleContainer);
+  toggleContainer.innerHTML = `
+    <select>
+      <option value="auto">Auto</option>
+      <option value="text-davinci-002-render-sha">3.5</option>
+      <option value="gpt-4o-mini">4o mini</option>
+      <option value="gpt-4o">4o</option>
+      <option value="o3-mini">o3 mini</option>
+    </select>
+  `;
+  document.body.appendChild(toggleContainer);
 
-    const select = toggleContainer.querySelector("select");
-    select.onchange = (evt) => {
-        GM.setValue("gptModel", evt.target.value);
-        console.log(`[force-gpt3] changing model to ${evt.target.value}`);
-    };
+  const select = toggleContainer.querySelector("select");
+  if (!select) {
+    return;
+  }
 
-    const selectVal = await GM.getValue(
-        "gptModel",
-        "text-davinci-002-render-sha",
-    );
-    select.value = selectVal;
+  select.onchange = () => {
+    GM.setValue("gptModel", select.value);
+    console.log(`[force-gpt3] changing model to ${select.value}`);
+  };
+
+  const selectVal = await GM.getValue(
+    "gptModel",
+    "text-davinci-002-render-sha",
+  );
+  select.value = selectVal;
 }
 
 // userscripts might have triggered DOM ready earlier
 // https://developer.apple.com/forums/thread/651215
 if (document.readyState !== "loading") {
-    mainRunner();
+  mainRunner();
 } else {
-    document.addEventListener("DOMContentLoaded", mainRunner);
+  document.addEventListener("DOMContentLoaded", mainRunner);
 }
