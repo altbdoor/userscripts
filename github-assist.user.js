@@ -3,7 +3,7 @@
 // @namespace   altbdoor
 // @match       https://github.com/*
 // @grant       none
-// @version     0.2
+// @version     0.3
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
@@ -25,6 +25,7 @@ function bindNotificationAssist() {
       ".octicon-git-pull-request-closed",
       ".octicon-tag",
       ".octicon-rocket",
+      ".octicon-check.color-fg-success",
     ];
 
     return [
