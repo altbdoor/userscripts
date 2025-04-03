@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.12
+// @version     1.13
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -94,6 +94,24 @@ async function mainRunner() {
     "text-davinci-002-render-sha",
   );
   select.value = selectVal;
+
+  // keybinds
+  windowRef.addEventListener("keydown", (evt) => {
+    if (evt.ctrlKey && evt.shiftKey) {
+      const changeEvt = new Event("change");
+
+      if (evt.key === "ArrowUp") {
+        select.selectedIndex = Math.max(0, select.selectedIndex - 1);
+        select.dispatchEvent(changeEvt);
+      } else if (evt.key === "ArrowDown") {
+        select.selectedIndex = Math.min(
+          select.options.length - 1,
+          select.selectedIndex + 1,
+        );
+        select.dispatchEvent(changeEvt);
+      }
+    }
+  });
 }
 
 // userscripts might have triggered DOM ready earlier
