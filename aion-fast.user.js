@@ -3,7 +3,7 @@
 // @namespace   altbdoor
 // @match       https://www.aion-archives.net/*
 // @grant       none
-// @version     0.1
+// @version     0.2
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/aion-fast.user.js
@@ -17,29 +17,38 @@ style.textContent = `
   #fast-container {
     position: absolute;
     z-index: 9999;
-    right: 1rem;
-    top: 1rem;
+    right: 0.5rem;
+    top: 0.5rem;
     background-color: rgba(0, 0, 0, 0.8);
     padding: 0.5rem;
+    max-height: calc(100vh - 1rem);
+    overflow-y: auto;
+    box-sizing: border-box;
+    box-shadow: 0 0 0.25rem 0 #fff;
+  }
+
+  #fast-container * {
+    box-sizing: border-box;
   }
 
   #fast-container h3 {
-    margin: 0;
+    margin: 0 0 0.5rem;
   }
 
   #fast-container > details > div {
-    width: 50vw;
+    width: 40vw;
   }
 
   #fast-container input,
   #fast-container textarea {
     width: 100%;
-    font-family: monospace;
+    font-family: inherit;
     background-color: transparent;
     padding: 0.25rem;
     border: 1px solid rgba(255, 255, 255, 0.6);
     color: #fff;
     border-radius: 0.25rem;
+    resize: vertical;
   }
 `;
 
@@ -48,7 +57,6 @@ fastElem.id = "fast-container";
 fastElem.innerHTML = `
   <details open>
     <summary>Show/hide fast</summary>
-
     <div>
       <h3>Send four digit:</h3>
       <div>
@@ -65,7 +73,7 @@ fastElem.innerHTML = `
       </div>
       <hr />
       <h3>Output:</h3>
-      <textarea rows="24" readonly></textarea>
+      <textarea rows="20" readonly></textarea>
     </div>
   </details>
 `;
@@ -101,9 +109,17 @@ window.addEventListener("load", () => {
     }
 
     textareaElem.value = "Loading...";
-    const res = await callBungaloo(inputVal);
-    const jsonVal = await res.json();
-    textareaElem.value = JSON.stringify(jsonVal, undefined, 2);
+    try {
+      const res = await callBungaloo(inputVal);
+      if (!res.ok) {
+        throw Error(`HTTP ${res.status}, failure`);
+      }
+
+      const jsonVal = await res.json();
+      textareaElem.value = JSON.stringify(jsonVal, undefined, 2);
+    } catch (err) {
+      textareaElem.value = String(err);
+    }
   });
 
   fenInputElem.addEventListener("keydown", async (evt) => {
@@ -125,8 +141,16 @@ window.addEventListener("load", () => {
     }
 
     textareaElem.value = "Loading...";
-    const res = await callBungaloo(codeVal + inputVal);
-    const jsonVal = await res.json();
-    textareaElem.value = JSON.stringify(jsonVal, undefined, 2);
+    try {
+      const res = await callBungaloo(codeVal + inputVal);
+      if (!res.ok) {
+        throw Error(`HTTP ${res.status}, failure`);
+      }
+
+      const jsonVal = await res.json();
+      textareaElem.value = JSON.stringify(jsonVal, undefined, 2);
+    } catch (err) {
+      textareaElem.value = String(err);
+    }
   });
 });
