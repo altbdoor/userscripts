@@ -3,7 +3,7 @@
 // @namespace   altbdoor
 // @match       https://github.com/*
 // @grant       none
-// @version     0.3
+// @version     0.4
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
