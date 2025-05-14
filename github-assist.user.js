@@ -68,6 +68,10 @@ function bindNotificationAssist() {
       const archiveForm = item.querySelector('form[data-status="archived"]');
       archiveForm?.requestSubmit();
     });
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500)
   });
 
   const rightBlock = document.querySelector(".js-check-all-container");
