@@ -71,7 +71,7 @@ function bindNotificationAssist() {
 
     setTimeout(() => {
       window.location.reload();
-    }, 500)
+    }, 500);
   });
 
   const rightBlock = document.querySelector(".js-check-all-container");

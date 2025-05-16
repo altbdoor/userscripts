@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.15
+// @version     1.16
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -56,10 +56,16 @@ async function mainRunner() {
   const style = document.createElement("style");
   style.innerHTML = `
     .toggleContainer {
-      position: absolute; right: 12rem; top: 0.5rem;
+      position: absolute;
+      right: calc(var(--toggle-container-right, 0.5rem) + 1rem);
+      top: var(--toggle-container-top, 0.5rem);
+      display: none;
     }
     .toggleContainer select {
       border-radius: 9999px;
+    }
+    body:has(#conversation-header-actions) .toggleContainer {
+      display: block;
     }
   `;
   document.head.append(style);
@@ -113,6 +119,38 @@ async function mainRunner() {
       }
     }
   });
+
+  /** @type {{ top: DOMRect['top']; width: DOMRect['width'] }} */
+  const lastRect = { top: 0, width: 0 };
+  const rootStyle = document.documentElement.style;
+
+  setInterval(() => {
+    const headerActionsElem = document.querySelector(
+      "#conversation-header-actions",
+    );
+
+    if (!headerActionsElem) {
+      rootStyle.removeProperty("--toggle-container-right");
+      rootStyle.removeProperty("--toggle-container-top");
+      lastRect.top = 0;
+      lastRect.width = 0;
+      return;
+    }
+
+    const { top, width } = headerActionsElem.getBoundingClientRect();
+    if (lastRect.width !== width) {
+      lastRect.width = width;
+      rootStyle.setProperty(
+        "--toggle-container-right",
+        `${Math.ceil(width)}px`,
+      );
+    }
+
+    if (lastRect.top !== top) {
+      lastRect.top = top;
+      rootStyle.setProperty("--toggle-container-top", `${Math.ceil(top)}px`);
+    }
+  }, 1000);
 }
 
 // userscripts might have triggered DOM ready earlier
