@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.16
+// @version     1.17
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -60,6 +60,7 @@ async function mainRunner() {
       right: calc(var(--toggle-container-right, 0.5rem) + 1rem);
       top: var(--toggle-container-top, 0.5rem);
       display: none;
+      transition: right 0.15s ease;
     }
     .toggleContainer select {
       border-radius: 9999px;
@@ -130,10 +131,6 @@ async function mainRunner() {
     );
 
     if (!headerActionsElem) {
-      rootStyle.removeProperty("--toggle-container-right");
-      rootStyle.removeProperty("--toggle-container-top");
-      lastRect.top = 0;
-      lastRect.width = 0;
       return;
     }
 
