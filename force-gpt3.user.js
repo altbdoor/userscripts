@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.17
+// @version     1.18
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
@@ -26,6 +26,10 @@ try {
 // https://blog.logrocket.com/intercepting-javascript-fetch-api-requests-responses/
 const originalFetch = windowRef.fetch;
 
+const conversationUrlRegex = new RegExp(
+  /https:\/\/chatgpt\.com\/backend-api\/.*conversation/,
+);
+
 /** @type {(...args: Parameters<typeof fetch>) => ReturnType<typeof fetch>} */
 windowRef.fetch = async (url, config) => {
   const gptModel = await GM.getValue("gptModel", "text-davinci-002-render-sha");
@@ -33,7 +37,7 @@ windowRef.fetch = async (url, config) => {
 
   if (
     gptModel !== "auto" &&
-    fixedUrl.includes("/backend-api/conversation") &&
+    conversationUrlRegex.test(fixedUrl) &&
     config?.method === "POST"
   ) {
     try {
