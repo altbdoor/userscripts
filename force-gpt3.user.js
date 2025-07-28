@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.18
+// @version     1.19
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
