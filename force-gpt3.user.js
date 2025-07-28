@@ -130,6 +130,10 @@ async function mainRunner() {
   const rootStyle = document.documentElement.style;
 
   setInterval(() => {
+    if (!toggleContainer.isConnected) {
+      document.body.appendChild(toggleContainer);
+    }
+
     const headerActionsElem = document.querySelector(
       "#conversation-header-actions",
     );

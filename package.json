@@ -3,7 +3,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/tampermonkey": "^5.0.4",
-    "prettier": "^3.5.3"
+    "prettier": "^3.6.2"
   },
   "scripts": {
     "start": "npx -y http-server@^14 -c 5 -p 8000",
