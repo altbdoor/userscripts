@@ -4,9 +4,10 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.20
+// @version     1.21
 // @author      altbdoor
 // @run-at      document-start
+// @homepageURL https://github.com/altbdoor/userscripts
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @icon        https://www.google.com/s2/favicons?sz=256&domain=chatgpt.com
@@ -14,6 +15,13 @@
 
 // @ts-check
 /// <reference types="@types/tampermonkey" />
+
+// https://chatgpt.com/backend-api/models
+const OPTIONS = [
+  { label: "4.1 mini", value: "gpt-4-1-mini" },
+  { label: "5", value: "gpt-5" },
+  { label: "5+ mini", value: "gpt-5-t-mini" },
+];
 
 // fallback for missing unsafeWindow
 /** @type {typeof unsafeWindow | Window} */
@@ -79,12 +87,14 @@ async function mainRunner() {
   const toggleContainer = document.createElement("div");
   toggleContainer.classList.add("toggleContainer");
 
+  const optionsHtml = OPTIONS.map(
+    (opt) => `<option value="${opt.value}">${opt.label}</option>`,
+  );
+
   toggleContainer.innerHTML = `
     <select>
       <option value="auto">Auto</option>
-      <option value="gpt-4-1-mini">4.1 mini</option>
-      <option value="gpt-5">5</option>
-      <option value="gpt-5-t-mini">5 think mini</option>
+      ${optionsHtml.join("")}
     </select>
   `;
   document.body.appendChild(toggleContainer);
@@ -99,10 +109,7 @@ async function mainRunner() {
     console.log(`[force-gpt3] changing model to ${select.value}`);
   };
 
-  const selectVal = await GM.getValue(
-    "gptModel",
-    "text-davinci-002-render-sha",
-  );
+  const selectVal = await GM.getValue("gptModel", OPTIONS[0].value);
   select.value = selectVal;
 
   // keybinds
