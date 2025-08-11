@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.21
+// @version     1.22
 // @author      altbdoor
 // @run-at      document-start
 // @homepageURL https://github.com/altbdoor/userscripts
@@ -18,6 +18,7 @@
 
 // https://chatgpt.com/backend-api/models
 const OPTIONS = [
+  { label: "4o mini", value: "gpt-4o-mini" },
   { label: "4.1 mini", value: "gpt-4-1-mini" },
   { label: "5", value: "gpt-5" },
   { label: "5+ mini", value: "gpt-5-t-mini" },
@@ -40,7 +41,7 @@ const conversationUrlRegex = new RegExp(
 
 /** @type {(...args: Parameters<typeof fetch>) => ReturnType<typeof fetch>} */
 windowRef.fetch = async (url, config) => {
-  const gptModel = await GM.getValue("gptModel", "text-davinci-002-render-sha");
+  const gptModel = await GM.getValue("gptModel", OPTIONS[0].value);
   const fixedUrl = typeof url === "string" ? url : url.toString();
 
   if (
