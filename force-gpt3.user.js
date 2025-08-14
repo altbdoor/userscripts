@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.22
+// @version     1.23
 // @author      altbdoor
 // @run-at      document-start
 // @homepageURL https://github.com/altbdoor/userscripts
@@ -20,6 +20,7 @@
 const OPTIONS = [
   { label: "4o mini", value: "gpt-4o-mini" },
   { label: "4.1 mini", value: "gpt-4-1-mini" },
+  { label: "5 mini", value: "gpt-5-mini" },
   { label: "5", value: "gpt-5" },
   { label: "5+ mini", value: "gpt-5-t-mini" },
 ];
