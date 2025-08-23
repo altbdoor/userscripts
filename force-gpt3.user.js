@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.23
+// @version     1.24
 // @author      altbdoor
 // @run-at      document-start
 // @homepageURL https://github.com/altbdoor/userscripts
@@ -17,12 +17,28 @@
 /// <reference types="@types/tampermonkey" />
 
 // https://chatgpt.com/backend-api/models
+// window.__reactRouterContext.state.loaderData["routes/_conversation"]
 const OPTIONS = [
-  { label: "4o mini", value: "gpt-4o-mini" },
-  { label: "4.1 mini", value: "gpt-4-1-mini" },
   { label: "5 mini", value: "gpt-5-mini" },
   { label: "5", value: "gpt-5" },
   { label: "5+ mini", value: "gpt-5-t-mini" },
+];
+
+/** @type {(keyof RequestInit)[]} */
+const requestInitKeys = [
+  "method",
+  "headers",
+  "body",
+  "mode",
+  "credentials",
+  "cache",
+  "redirect",
+  "referrer",
+  "referrerPolicy",
+  "integrity",
+  "keepalive",
+  "signal",
+  "window",
 ];
 
 // fallback for missing unsafeWindow
@@ -43,26 +59,54 @@ const conversationUrlRegex = new RegExp(
 /** @type {(...args: Parameters<typeof fetch>) => ReturnType<typeof fetch>} */
 windowRef.fetch = async (url, config) => {
   const gptModel = await GM.getValue("gptModel", OPTIONS[0].value);
-  const fixedUrl = typeof url === "string" ? url : url.toString();
+  let fixedUrl = "";
+  let fixedMethod = "";
+
+  if (typeof url === "string" || url instanceof URL) {
+    fixedMethod = config?.method ?? "";
+    fixedUrl = url.toString();
+  } else if (url instanceof Request) {
+    fixedMethod = url.method;
+    fixedUrl = url.url;
+  }
 
   if (
     gptModel !== "auto" &&
     conversationUrlRegex.test(fixedUrl) &&
-    config?.method === "POST"
+    fixedMethod === "POST"
   ) {
+    let fixedConfig = config ?? {};
+
+    if (url instanceof Request) {
+      const reqClone = url.clone();
+
+      /** @type {RequestInit} */
+      fixedConfig = requestInitKeys.reduce((acc, val) => {
+        if (val !== "body") {
+          acc[val] = reqClone[val];
+        }
+
+        return acc;
+      }, {});
+
+      fixedConfig.body = await reqClone.text();
+    }
+
     try {
-      const body = JSON.parse(config.body?.toString() || "{}");
-      config.body = JSON.stringify({
+      const body = JSON.parse(fixedConfig.body?.toString() || "{}");
+      fixedConfig.body = JSON.stringify({
         ...body,
         model: gptModel,
       });
+
+      return originalFetch(fixedUrl, fixedConfig);
     } catch (error) {
-      console.error("[force-gpt3] Error parsing JSON body:", error);
+      console.error("[force-gpt3] Error modifying request:", error);
+      return originalFetch(url, config);
     }
   }
 
-  const response = await originalFetch(url, config);
-  return response;
+  return originalFetch(url, config);
 };
 
 async function mainRunner() {
