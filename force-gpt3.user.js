@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.24
+// @version     1.25
 // @author      altbdoor
 // @run-at      document-start
 // @homepageURL https://github.com/altbdoor/userscripts
@@ -12,9 +12,6 @@
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @icon        https://www.google.com/s2/favicons?sz=256&domain=chatgpt.com
 // ==/UserScript==
-
-// @ts-check
-/// <reference types="@types/tampermonkey" />
 
 // https://chatgpt.com/backend-api/models
 // window.__reactRouterContext.state.loaderData["routes/_conversation"]

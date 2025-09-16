@@ -3,7 +3,7 @@
 // @namespace   altbdoor
 // @match       https://www.aion-archives.net/*
 // @grant       none
-// @version     0.2
+// @version     0.3
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/aion-fast.user.js
@@ -102,7 +102,7 @@ window.addEventListener("load", () => {
     }
 
     evt.preventDefault();
-    const inputVal = evt.currentTarget.value.trim();
+    const inputVal = codeInputElem.value.trim();
 
     if (inputVal === "") {
       return;
@@ -135,7 +135,7 @@ window.addEventListener("load", () => {
       return;
     }
 
-    const inputVal = evt.currentTarget.value.trim();
+    const inputVal = fenInputElem.value.trim();
     if (inputVal === "") {
       return;
     }

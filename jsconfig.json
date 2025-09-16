@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "skipLibCheck": true,
+    "lib": ["ES2015", "DOM", "DOM.Iterable", "ES2017.Object"],
+    "target": "ES2017"
+  },
+  "include": ["*.js"],
+  "exclude": ["archive/*.js"]
+}

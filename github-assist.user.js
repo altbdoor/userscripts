@@ -3,7 +3,7 @@
 // @namespace   altbdoor
 // @match       https://github.com/*
 // @grant       none
-// @version     0.4
+// @version     0.5
 // @author      altbdoor
 // @run-at      document-start
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
@@ -12,8 +12,6 @@
 // ==/UserScript==
 
 // heavily inspired by https://greasyfork.org/en/scripts/461320-refined-github-notifications
-
-// @ts-check
 
 /** @type {{ [key: string]: Function }} */
 let cleanups = {};
