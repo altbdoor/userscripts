@@ -7,8 +7,8 @@
 // @version     0.1
 // @author      altbdoor
 // @run-at      document-start
-// @updateURL   https://github.com/altbdoor/userscripts/raw/master/github-pr-status-in-slack.js
-// @downloadURL https://github.com/altbdoor/userscripts/raw/master/github-pr-status-in-slack.js
+// @updateURL   https://github.com/altbdoor/userscripts/raw/master/github-pr-status-in-slack.user.js
+// @downloadURL https://github.com/altbdoor/userscripts/raw/master/github-pr-status-in-slack.user.js
 // @icon        https://www.google.com/s2/favicons?sz=256&domain=slack.com
 // ==/UserScript==
 
