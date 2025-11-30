@@ -2,11 +2,12 @@
 // @name        imgflip
 // @namespace   altbdoor
 // @match       https://imgflip.com/memegenerator/*
-// @version     1.1
+// @version     1.2
 // @author      altbdoor
 // @run-at      document-end
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/imgflip.user.js
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/imgflip.user.js
+// @icon        https://www.google.com/s2/favicons?sz=64&domain=imgflip.com
 // ==/UserScript==
 
 window.addEventListener("load", () => {

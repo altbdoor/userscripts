@@ -4,13 +4,13 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.26
+// @version     1.27
 // @author      altbdoor
 // @run-at      document-start
 // @homepageURL https://github.com/altbdoor/userscripts
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
 // @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
-// @icon        https://www.google.com/s2/favicons?sz=256&domain=chatgpt.com
+// @icon        https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
 // ==/UserScript==
 
 // https://chatgpt.com/backend-api/models
@@ -120,6 +120,9 @@ async function mainRunner() {
     }
     .toggleContainer select {
       border-radius: 9999px;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
     }
     body:has(#conversation-header-actions) .toggleContainer {
       display: block;
