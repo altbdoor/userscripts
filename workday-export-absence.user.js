@@ -3,7 +3,7 @@
 // @namespace   altbdoor
 // @match       https://www.myworkday.com/*
 // @grant       none
-// @version     0.1
+// @version     0.2
 // @author      altbdoor
 // @grant       none
 // @run-at      document-start
@@ -17,6 +17,9 @@
  */
 
 (() => {
+  /** @type {string[]} */
+  let icsStr = [];
+
   const originalOpen = XMLHttpRequest.prototype.open;
   const originalSend = XMLHttpRequest.prototype.send;
 
@@ -114,7 +117,7 @@
       });
 
     /** @type {string[]} */
-    const icsStr = [];
+    icsStr = [];
     icsStr.push("BEGIN:VCALENDAR");
     icsStr.push("VERSION:2.0");
     icsStr.push("");
@@ -133,28 +136,32 @@
     });
 
     icsStr.push("END:VCALENDAR");
-
-    window.addEventListener("keydown", (evt) => {
-      if (evt.key !== "F3") {
-        return;
-      }
-
-      evt.preventDefault();
-
-      const blob = new Blob([icsStr.join("\r\n")], {
-        type: "text/calendar;charset=utf-8",
-      });
-      const url = URL.createObjectURL(blob);
-
-      const linkElem = document.createElement("a");
-      linkElem.href = url;
-      linkElem.download = "timeoff.ics";
-
-      document.body.appendChild(linkElem);
-      linkElem.click();
-      document.body.removeChild(linkElem);
-
-      URL.revokeObjectURL(url);
-    });
   };
+
+  window.addEventListener("keydown", (evt) => {
+    if (evt.key !== "F3") {
+      return;
+    }
+
+    if (icsStr.length === 0) {
+      return;
+    }
+
+    evt.preventDefault();
+
+    const blob = new Blob([icsStr.join("\r\n")], {
+      type: "text/calendar;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const linkElem = document.createElement("a");
+    linkElem.href = url;
+    linkElem.download = "timeoff.ics";
+
+    document.body.appendChild(linkElem);
+    linkElem.click();
+    document.body.removeChild(linkElem);
+
+    URL.revokeObjectURL(url);
+  });
 })();
