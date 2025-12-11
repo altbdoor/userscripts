@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name        imgflip
 // @namespace   altbdoor
+// @match       https://imgflip.com/memegenerator
 // @match       https://imgflip.com/memegenerator/*
-// @version     1.2
+// @version     1.3
 // @author      altbdoor
 // @run-at      document-end
 // @updateURL   https://github.com/altbdoor/userscripts/raw/master/imgflip.user.js
