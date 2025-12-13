@@ -4,7 +4,7 @@
 // @match       https://chatgpt.com/*
 // @grant       GM.setValue
 // @grant       GM.getValue
-// @version     1.28
+// @version     1.29
 // @author      altbdoor
 // @run-at      document-start
 // @homepageURL https://github.com/altbdoor/userscripts
@@ -14,12 +14,11 @@
 // ==/UserScript==
 
 // https://chatgpt.com/backend-api/models
-// window.__reactRouterContext.state.loaderData["routes/_conversation"]
 const OPTIONS = [
   { label: "5 mini", value: "gpt-5-mini" },
   { label: "5", value: "gpt-5" },
   { label: "5.1", value: "gpt-5-1" },
-  { label: "5.1 inst", value: "gpt-5-1-instant" },
+  { label: "5.2", value: "gpt-5-2" },
   { label: "5+ mini", value: "gpt-5-t-mini" },
 ];
 
@@ -183,6 +182,10 @@ async function mainRunner() {
   const rootStyle = document.documentElement.style;
 
   setInterval(() => {
+    if (document.hidden) {
+      return;
+    }
+    
     if (!toggleContainer.isConnected) {
       document.body.appendChild(toggleContainer);
     }
