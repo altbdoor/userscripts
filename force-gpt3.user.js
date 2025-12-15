@@ -1,16 +1,17 @@
 // ==UserScript==
-// @name        Force GPT3
-// @namespace   altbdoor
-// @match       https://chatgpt.com/*
-// @grant       GM.setValue
-// @grant       GM.getValue
-// @version     1.29
-// @author      altbdoor
-// @run-at      document-start
-// @homepageURL https://github.com/altbdoor/userscripts
-// @updateURL   https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
-// @downloadURL https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
-// @icon        https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
+// @name         Force GPT3
+// @namespace    altbdoor
+// @match        https://chatgpt.com/*
+// @grant        GM.setValue
+// @grant        GM.getValue
+// @version      1.29
+// @author       altbdoor
+// @run-at       document-start
+// @homepageURL  https://github.com/altbdoor/userscripts
+// @homepage     https://github.com/altbdoor/userscripts
+// @updateURL    https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
+// @downloadURL  https://github.com/altbdoor/userscripts/raw/master/force-gpt3.user.js
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=chatgpt.com
 // ==/UserScript==
 
 // https://chatgpt.com/backend-api/models
@@ -185,7 +186,7 @@ async function mainRunner() {
     if (document.hidden) {
       return;
     }
-    
+
     if (!toggleContainer.isConnected) {
       document.body.appendChild(toggleContainer);
     }

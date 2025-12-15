@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name        GitHub assist
-// @namespace   altbdoor
-// @match       https://github.com/*
-// @grant       none
-// @version     0.5
-// @author      altbdoor
-// @run-at      document-start
-// @updateURL   https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
-// @downloadURL https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
-// @icon        https://www.google.com/s2/favicons?sz=256&domain=github.com
+// @name         GitHub assist
+// @namespace    altbdoor
+// @match        https://github.com/*
+// @grant        none
+// @version      0.5
+// @author       altbdoor
+// @run-at       document-start
+// @updateURL    https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
+// @downloadURL  https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
+// @icon         https://www.google.com/s2/favicons?sz=256&domain=github.com
 // ==/UserScript==
 
 // heavily inspired by https://greasyfork.org/en/scripts/461320-refined-github-notifications

@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name        Workday export absence
-// @namespace   altbdoor
-// @match       https://www.myworkday.com/*
-// @grant       none
-// @version     0.2
-// @author      altbdoor
-// @grant       none
-// @run-at      document-start
-// @updateURL   https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
-// @downloadURL https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
-// @icon        https://www.google.com/s2/favicons?sz=64&domain=workday.com
+// @name         Workday export absence
+// @namespace    altbdoor
+// @match        https://www.myworkday.com/*
+// @grant        none
+// @version      0.2
+// @author       altbdoor
+// @grant        none
+// @run-at       document-start
+// @updateURL    https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
+// @downloadURL  https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=workday.com
 // ==/UserScript==
 
 /**

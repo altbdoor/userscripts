@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name        aion-fast
-// @namespace   altbdoor
-// @match       https://www.aion-archives.net/*
-// @grant       none
-// @version     0.3
-// @author      altbdoor
-// @run-at      document-start
-// @updateURL   https://github.com/altbdoor/userscripts/raw/master/aion-fast.user.js
-// @downloadURL https://github.com/altbdoor/userscripts/raw/master/aion-fast.user.js
+// @name         aion-fast
+// @namespace    altbdoor
+// @match        https://www.aion-archives.net/*
+// @grant        none
+// @version      0.3
+// @author       altbdoor
+// @run-at       document-start
+// @updateURL    https://github.com/altbdoor/userscripts/raw/master/aion-fast.user.js
+// @downloadURL  https://github.com/altbdoor/userscripts/raw/master/aion-fast.user.js
 // ==/UserScript==
 
 const originalLog = console.log;

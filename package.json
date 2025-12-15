@@ -1,12 +1,18 @@
 {
   "name": "userscripts",
+  "private": true,
   "license": "MIT",
   "dependencies": {
-    "@types/tampermonkey": "^5.0.4",
-    "prettier": "^3.6.2"
+    "@types/tampermonkey": "^5.0.5",
+    "prettier": "^3.7.4"
   },
   "scripts": {
     "start": "npx -y http-server@^14 -c 5 -p 8000",
-    "pretty": "prettier -wu --log-level warn \"**/*\""
+    "pretty": "prettier -wu --log-level warn \"**/*\"",
+    "lint": "eslint --fix ."
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "eslint-plugin-userscripts": "^0.5.6"
   }
 }
