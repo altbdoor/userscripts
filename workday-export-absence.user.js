@@ -3,7 +3,7 @@
 // @namespace    altbdoor
 // @match        https://www.myworkday.com/*
 // @grant        none
-// @version      0.2
+// @version      0.3
 // @author       altbdoor
 // @grant        none
 // @run-at       document-start
@@ -52,12 +52,8 @@
           return;
         }
 
-        try {
-          const json = JSON.parse(self.responseText);
-          handleJsonData(json);
-        } catch (err) {
-          throw err;
-        }
+        const json = JSON.parse(self.responseText);
+        handleJsonData(json);
       } catch (err) {
         console.error("error:", err);
       }
@@ -116,6 +112,8 @@
         };
       });
 
+    const today = new Date();
+
     /** @type {string[]} */
     icsStr = [];
     icsStr.push("BEGIN:VCALENDAR");
@@ -127,7 +125,7 @@
       icsStr.push(
         `UID:${evt.startDate}_${evt.title.replace(/\s+/g, "_").toLowerCase()}`,
       );
-      icsStr.push(`DTSTAMP:${evt.startDate}T000000Z`);
+      icsStr.push(`DTSTAMP:${dateToICSLocal(today)}T000000Z`);
       icsStr.push(`DTSTART;VALUE=DATE:${evt.startDate}`);
       icsStr.push(`DTEND;VALUE=DATE:${evt.endDate}`);
       icsStr.push(`SUMMARY:${evt.title}`);
@@ -144,6 +142,7 @@
     }
 
     if (icsStr.length === 0) {
+      alert("No data!");
       return;
     }
 
@@ -156,7 +155,7 @@
 
     const linkElem = document.createElement("a");
     linkElem.href = url;
-    linkElem.download = "timeoff.ics";
+    linkElem.download = `timeoff-${Math.trunc(Date.now() / 1000)}.ics`;
 
     document.body.appendChild(linkElem);
     linkElem.click();
