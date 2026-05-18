@@ -99,7 +99,7 @@ const handleNext = () => {
     /** @type {HTMLVideoElement | null} */
     const vidElem = document.querySelector("#COURSE_VIDEO");
     if (vidElem) {
-      vidElem.playbackRate = 2;
+      vidElem.playbackRate = 20;
     }
   }
 };
