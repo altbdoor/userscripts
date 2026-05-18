@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LRN pasta
 // @namespace    altbdoor
-// @version      0.3
+// @version      0.4
 // @description  Take hold of a weapon and shield, and rise to help me.
 // @author       altbdoor
 // @match        https://*.course.lrn.com/*
