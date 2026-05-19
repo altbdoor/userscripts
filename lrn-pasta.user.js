@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LRN pasta
 // @namespace    altbdoor
-// @version      0.4
+// @version      0.5
 // @description  Take hold of a weapon and shield, and rise to help me.
 // @author       altbdoor
 // @match        https://*.course.lrn.com/*
@@ -63,6 +63,13 @@ const handlePasta = () => {
   );
 };
 
+/** @param {Number} timeInMs */
+const waitForTime = (timeInMs) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeInMs);
+  });
+};
+
 const handleNext = () => {
   /** @type {HTMLButtonElement | null} */
   const nextBtn = document.querySelector("#NAV_NEXT");
@@ -75,15 +82,19 @@ const handleNext = () => {
     return;
   }
 
-  const accordion = document.querySelectorAll(
-    ".js-track-spaceKey[role='button']:not(.viewed)",
+  /** @type {HTMLButtonElement[]} */
+  const accordion = Array.from(
+    document.querySelectorAll(".js-track-spaceKey[role='button']"),
   );
+
   if (accordion.length > 0) {
-    accordion.forEach((btn, index) => {
-      setTimeout(() => {
-        /** @type {HTMLButtonElement} */ (btn).click();
-      }, index * 200);
-    });
+    (async () => {
+      for (const btn of accordion) {
+        btn.click();
+        await waitForTime(600);
+      }
+    })();
+
     return;
   }
 
@@ -99,7 +110,7 @@ const handleNext = () => {
     /** @type {HTMLVideoElement | null} */
     const vidElem = document.querySelector("#COURSE_VIDEO");
     if (vidElem) {
-      vidElem.playbackRate = 20;
+      vidElem.playbackRate = 16;
     }
   }
 };

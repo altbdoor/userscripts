@@ -3,7 +3,8 @@
     "checkJs": true,
     "skipLibCheck": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "target": "ES2020"
+    "target": "ES2020",
+    "noImplicitAny": false
   },
   "include": ["*.js"],
   "exclude": ["archive/*.js"]
