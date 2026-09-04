@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LRN pasta
 // @namespace    altbdoor
-// @version      0.6
+// @version      0.7
 // @description  Take hold of a weapon and shield, and rise to help me.
 // @author       altbdoor
 // @match        https://*.course.lrn.com/*
@@ -10,6 +10,8 @@
 // @updateURL    https://github.com/altbdoor/userscripts/raw/master/lrn-pasta.user.js
 // @downloadURL  https://github.com/altbdoor/userscripts/raw/master/lrn-pasta.user.js
 // ==/UserScript==
+
+const cooldown = 800;
 
 const handlePasta = () => {
   const title =
@@ -79,7 +81,7 @@ const getAccordions = () => {
   return buttons;
 };
 
-const handleNext = () => {
+const handleNext = async () => {
   /** @type {HTMLButtonElement | null} */
   const nextBtn = document.querySelector("#NAV_NEXT");
   if (
@@ -93,17 +95,15 @@ const handleNext = () => {
 
   const accordionLength = getAccordions().length;
   if (accordionLength > 0) {
-    (async () => {
-      const idxMap = Array(accordionLength)
-        .fill(0)
-        .map((_, idx) => idx);
+    const idxMap = Array(accordionLength)
+      .fill(0)
+      .map((_, idx) => idx);
 
-      for (const idx of idxMap) {
-        const refetchAccordion = getAccordions();
-        refetchAccordion[idx].click();
-        await waitForTime(600);
-      }
-    })();
+    for (const idx of idxMap) {
+      const refetchAccordion = getAccordions();
+      refetchAccordion[idx].click();
+      await waitForTime(cooldown);
+    }
 
     return;
   }
@@ -122,6 +122,33 @@ const handleNext = () => {
     if (vidElem) {
       vidElem.playbackRate = 16;
     }
+
+    return;
+  }
+
+  const headings = Array.from(document.querySelectorAll("h1"));
+  const beforeYouGo = headings.find((elem) =>
+    elem.textContent.trim().toLowerCase().startsWith("before you go"),
+  );
+  if (beforeYouGo) {
+    const checks = Array.from(
+      document.querySelectorAll('input[type="checkbox"]'),
+    ).filter((el) => el.checkVisibility());
+
+    for (const el of checks) {
+      const elType = /** @type {HTMLInputElement} */ (el);
+
+      if (!elType.checked) {
+        elType.click();
+        await waitForTime(cooldown);
+      }
+    }
+
+    Array.from(document.querySelectorAll("button"))
+      .filter((el) => el.checkVisibility())
+      .filter((el) => el.textContent.trim().toLowerCase() === "submit")
+      .filter((el) => !el.disabled)
+      .forEach((el) => el.click());
   }
 };
 
