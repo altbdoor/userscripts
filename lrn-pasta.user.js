@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LRN pasta
 // @namespace    altbdoor
-// @version      0.5
+// @version      0.6
 // @description  Take hold of a weapon and shield, and rise to help me.
 // @author       altbdoor
 // @match        https://*.course.lrn.com/*
@@ -70,6 +70,15 @@ const waitForTime = (timeInMs) => {
   });
 };
 
+const getAccordions = () => {
+  /** @type {HTMLButtonElement[]} */
+  const buttons = Array.from(
+    document.querySelectorAll(".js-track-spaceKey[role='button']"),
+  );
+
+  return buttons;
+};
+
 const handleNext = () => {
   /** @type {HTMLButtonElement | null} */
   const nextBtn = document.querySelector("#NAV_NEXT");
@@ -82,15 +91,16 @@ const handleNext = () => {
     return;
   }
 
-  /** @type {HTMLButtonElement[]} */
-  const accordion = Array.from(
-    document.querySelectorAll(".js-track-spaceKey[role='button']"),
-  );
-
-  if (accordion.length > 0) {
+  const accordionLength = getAccordions().length;
+  if (accordionLength > 0) {
     (async () => {
-      for (const btn of accordion) {
-        btn.click();
+      const idxMap = Array(accordionLength)
+        .fill(0)
+        .map((_, idx) => idx);
+
+      for (const idx of idxMap) {
+        const refetchAccordion = getAccordions();
+        refetchAccordion[idx].click();
         await waitForTime(600);
       }
     })();
