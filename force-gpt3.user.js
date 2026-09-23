@@ -4,7 +4,7 @@
 // @match        https://chatgpt.com/*
 // @grant        GM.setValue
 // @grant        GM.getValue
-// @version      1.34
+// @version      1.35
 // @author       altbdoor
 // @run-at       document-start
 // @homepageURL  https://github.com/altbdoor/userscripts
@@ -17,13 +17,12 @@
 (() => {
   // https://chatgpt.com/backend-api/models
   const OPTIONS = [
-    { label: "5.3 mini", value: "gpt-5-3-mini" },
     { label: "5.5 mini", value: "gpt-5-5-mini" },
     { label: "5.6 Luna mini", value: "gpt-5-6-mini" },
-    { label: "5.3", value: "gpt-5-3" },
     { label: "5.5", value: "gpt-5-5" },
     { label: "5.6 Luna", value: "gpt-5-6" },
     { label: "5.4+ mini", value: "gpt-5-4-t-mini" },
+    { label: "5.6+ Luna mini", value: "gpt-5-6-t-mini" },
   ];
 
   // fallback for missing unsafeWindow
