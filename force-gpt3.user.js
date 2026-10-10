@@ -4,7 +4,7 @@
 // @match        https://chatgpt.com/*
 // @grant        GM.setValue
 // @grant        GM.getValue
-// @version      1.35
+// @version      1.36
 // @author       altbdoor
 // @run-at       document-start
 // @homepageURL  https://github.com/altbdoor/userscripts
@@ -17,6 +17,9 @@
 (() => {
   // https://chatgpt.com/backend-api/models
   const OPTIONS = [
+    { label: "6", value: "gpt-6" },
+    { label: "6+ mini", value: "gpt-6-t-mini" },
+    { label: "6 mini", value: "gpt-6-mini" },
     { label: "5.5 mini", value: "gpt-5-5-mini" },
     { label: "5.6 Luna mini", value: "gpt-5-6-mini" },
     { label: "5.5", value: "gpt-5-5" },
