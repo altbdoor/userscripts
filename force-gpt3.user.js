@@ -4,7 +4,7 @@
 // @match        https://chatgpt.com/*
 // @grant        GM.setValue
 // @grant        GM.getValue
-// @version      1.36
+// @version      1.37
 // @author       altbdoor
 // @run-at       document-start
 // @homepageURL  https://github.com/altbdoor/userscripts
@@ -20,12 +20,11 @@
     { label: "6", value: "gpt-6" },
     { label: "6+ mini", value: "gpt-6-t-mini" },
     { label: "6 mini", value: "gpt-6-mini" },
-    { label: "5.5 mini", value: "gpt-5-5-mini" },
-    { label: "5.6 Luna mini", value: "gpt-5-6-mini" },
-    { label: "5.5", value: "gpt-5-5" },
-    { label: "5.6 Luna", value: "gpt-5-6" },
-    { label: "5.4+ mini", value: "gpt-5-4-t-mini" },
     { label: "5.6+ Luna mini", value: "gpt-5-6-t-mini" },
+    { label: "5.6 Luna mini", value: "gpt-5-6-mini" },
+    { label: "5.6 Luna", value: "gpt-5-6" },
+    { label: "5.5", value: "gpt-5-5" },
+    { label: "5.5 mini", value: "gpt-5-5-mini" },
   ];
 
   // fallback for missing unsafeWindow
@@ -82,17 +81,14 @@
       position: absolute;
       right: calc(var(--toggle-container-right, 0.5rem) + 1rem);
       top: var(--toggle-container-top, 0.5rem);
-      display: none;
       transition: right 0.15s ease;
     }
     .toggleContainer select {
       border-radius: 9999px;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-default);
-    }
-    body:has(#conversation-header-actions) .toggleContainer {
-      display: block;
+      padding: 0.25rem 0.5rem;
+      background-color: var(--color-surface-card);
+      color: var(--color-text-button-outline);
+      border: 1px solid var(--color-border-button-outline);
     }
   `;
     document.head.append(style);
@@ -158,7 +154,7 @@
       }
 
       const headerActionsElem = document.querySelector(
-        "#conversation-header-actions",
+        `[data-testid="app-shell-header-context-menu-surface"] > div`,
       );
 
       if (!headerActionsElem) {
