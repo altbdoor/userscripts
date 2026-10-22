@@ -4,7 +4,7 @@
 // @match        https://chatgpt.com/*
 // @grant        GM.setValue
 // @grant        GM.getValue
-// @version      1.37
+// @version      1.38
 // @author       altbdoor
 // @run-at       document-start
 // @homepageURL  https://github.com/altbdoor/userscripts
@@ -89,6 +89,10 @@
       background-color: var(--color-surface-card);
       color: var(--color-text-button-outline);
       border: 1px solid var(--color-border-button-outline);
+    }
+
+    form > .contents:not(:has(input)) {
+      display: none !important;
     }
   `;
     document.head.append(style);
