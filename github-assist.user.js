@@ -2,8 +2,8 @@
 // @name         GitHub assist
 // @namespace    altbdoor
 // @match        https://github.com/*
-// @grant        none
-// @version      0.6
+// @grant        GM.xmlHttpRequest
+// @version      0.7
 // @author       altbdoor
 // @run-at       document-end
 // @updateURL    https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
