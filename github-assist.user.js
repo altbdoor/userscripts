@@ -3,7 +3,7 @@
 // @namespace    altbdoor
 // @match        https://github.com/*
 // @grant        GM.xmlHttpRequest
-// @version      0.7
+// @version      0.8
 // @author       altbdoor
 // @run-at       document-end
 // @updateURL    https://github.com/altbdoor/userscripts/raw/master/github-assist.user.js
@@ -64,10 +64,17 @@
   };
 
   setInterval(async () => {
-    /** @type {HTMLTextAreaElement | null} */
-    const textBox = document.querySelector(
+    const queries = [
+      // old style
       '[data-testid="mergebox-border-container"] textarea',
-    );
+      // new style
+      '[data-component="Portal"]:has(textarea) textarea[placeholder^="Add an optional"]',
+    ].join(", ");
+
+    /** @type {HTMLTextAreaElement[]} */
+    const textBoxes = Array.from(document.querySelectorAll(queries));
+    const textBox = textBoxes.find((elem) => elem.value === "");
+
     if (textBox && textBox.value === "") {
       const nextVal = await getCombinedCommitText();
       if (nextVal) {
