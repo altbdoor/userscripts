@@ -2,10 +2,9 @@
 // @name         Workday export absence
 // @namespace    altbdoor
 // @match        https://www.myworkday.com/*
-// @grant        none
-// @version      0.3
+// @grant        GM_setClipboard
+// @version      0.4
 // @author       altbdoor
-// @grant        none
 // @run-at       document-start
 // @updateURL    https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
 // @downloadURL  https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
@@ -16,9 +15,21 @@
   @typedef {XMLHttpRequest & { __url?: string }} XHRWithUrl
  */
 
+/**
+  @typedef {Object} EventData
+  @property {string} title
+  @property {string} owner
+  @property {Date} startDate
+  @property {Date} endDate
+ */
+
+/**
+  @typedef {{ [key: string]: EventData[] }} EventDataMap
+ */
+
 (() => {
-  /** @type {string[]} */
-  let icsStr = [];
+  /** @type {EventDataMap} */
+  let memoryEventsPerUser = {};
 
   const originalOpen = XMLHttpRequest.prototype.open;
   const originalSend = XMLHttpRequest.prototype.send;
@@ -62,17 +73,7 @@
     return originalSend.apply(this, arguments);
   };
 
-  /** @param {Date} d */
-  function dateToICSLocal(d) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${year}${month}${day}`;
-  }
-
   const handleJsonData = (data) => {
-    const username = data.currentUser?.label ?? "unknown user";
-
     /** @type {any[]} */
     const children = data.body?.children ?? [];
     const calendarWidget = children.find((el) => el.widget === "calendar");
@@ -84,14 +85,18 @@
     /** @type {any[]} */
     const events = calendarWidget.consolidatedList?.children ?? [];
 
+    /** @type {EventData[]} */
     const validEvents = events
-      .filter((evt) => evt.type?.instances?.at(0)?.text === "Time Off")
+      .filter((evt) => evt.style.value === "approved")
       .map((evt) => {
         /** @type {string} */
-        let title = evt.title?.value ?? "unknown event";
-        if (title.toLowerCase() === "annual leave") {
-          title = username;
-        }
+        let title = evt.blockIdentifier?.value ?? "unknown event";
+        title = title.replace(/[A-Za-z0-9]{32}Approved$/, "");
+        title = title.replace(/- Time Off$/i, "");
+        title = title.trim();
+
+        const owner =
+          evt.owner?.header?.instances?.at(0)?.text ?? "unknown user";
 
         const { Y, M, D } = evt.date?.value ?? {};
         const startDate = new Date(
@@ -101,66 +106,49 @@
         );
         startDate.setHours(0, 0, 0);
 
-        const days = parseInt(evt.quantity?.value ?? "1", 10);
+        const subDays = parseFloat(evt.quantity?.value ?? "1.0");
         const endDate = new Date(startDate);
-        endDate.setDate(endDate.getDate() + days);
+        endDate.setHours(endDate.getHours() + subDays * 24);
 
         return {
           title,
-          startDate: dateToICSLocal(startDate),
-          endDate: dateToICSLocal(endDate),
+          owner,
+          startDate,
+          endDate,
         };
       });
 
-    const today = new Date();
+    // inefficient remap, to group better in future?
+    memoryEventsPerUser = validEvents.reduce((acc, val) => {
+      if (!(val.owner in acc)) {
+        acc[val.owner] = [];
+      }
 
-    /** @type {string[]} */
-    icsStr = [];
-    icsStr.push("BEGIN:VCALENDAR");
-    icsStr.push("VERSION:2.0");
-    icsStr.push("");
+      acc[val.owner].push(val);
+      return acc;
+    }, /** @type {EventDataMap} */ ({}));
 
-    validEvents.forEach((evt) => {
-      icsStr.push("BEGIN:VEVENT");
-      icsStr.push(
-        `UID:${evt.startDate}_${evt.title.replace(/\s+/g, "_").toLowerCase()}`,
-      );
-      icsStr.push(`DTSTAMP:${dateToICSLocal(today)}T000000Z`);
-      icsStr.push(`DTSTART;VALUE=DATE:${evt.startDate}`);
-      icsStr.push(`DTEND;VALUE=DATE:${evt.endDate}`);
-      icsStr.push(`SUMMARY:${evt.title}`);
-      icsStr.push("END:VEVENT");
-      icsStr.push("");
+    let fullText = [];
+    Object.entries(memoryEventsPerUser).map(([owner, events]) => {
+      fullText = fullText.concat([
+        `## ${owner}`,
+        "",
+        "| Person | Event | Date |",
+        "| --- | --- | --- |",
+      ]);
+
+      events.forEach((evt) => {
+        const startDate = evt.startDate.toLocaleDateString("en-MY", {
+          day: "2-digit",
+          month: "short",
+        });
+
+        fullText.push(`| ${owner} | ${evt.title} | ${startDate} |`);
+      });
+
+      fullText.push("");
     });
 
-    icsStr.push("END:VCALENDAR");
+    GM_setClipboard(fullText.join("\n").trim());
   };
-
-  window.addEventListener("keydown", (evt) => {
-    if (evt.key !== "F3") {
-      return;
-    }
-
-    if (icsStr.length === 0) {
-      alert("No data!");
-      return;
-    }
-
-    evt.preventDefault();
-
-    const blob = new Blob([icsStr.join("\r\n")], {
-      type: "text/calendar;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-
-    const linkElem = document.createElement("a");
-    linkElem.href = url;
-    linkElem.download = `timeoff-${Math.trunc(Date.now() / 1000)}.ics`;
-
-    document.body.appendChild(linkElem);
-    linkElem.click();
-    document.body.removeChild(linkElem);
-
-    URL.revokeObjectURL(url);
-  });
 })();
