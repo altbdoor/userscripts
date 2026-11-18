@@ -3,7 +3,7 @@
 // @namespace    altbdoor
 // @match        https://www.myworkday.com/*
 // @grant        GM_setClipboard
-// @version      0.4
+// @version      0.5
 // @author       altbdoor
 // @run-at       document-start
 // @updateURL    https://github.com/altbdoor/userscripts/raw/master/workday-export-absence.user.js
@@ -28,9 +28,6 @@
  */
 
 (() => {
-  /** @type {EventDataMap} */
-  let memoryEventsPerUser = {};
-
   const originalOpen = XMLHttpRequest.prototype.open;
   const originalSend = XMLHttpRequest.prototype.send;
 
@@ -93,7 +90,20 @@
         let title = evt.blockIdentifier?.value ?? "unknown event";
         title = title.replace(/[A-Za-z0-9]{32}Approved$/, "");
         title = title.replace(/- Time Off$/i, "");
-        title = title.trim();
+
+        if (
+          title.toLowerCase().includes("time off") ||
+          title.toLowerCase().includes("annual leave")
+        ) {
+          title = "Time off";
+        } else if (title.toLowerCase().includes("sick")) {
+          title = "Sick";
+        } else if (title.toLowerCase().trim() === "work from elsewhere") {
+          title = "WFE";
+        } else {
+          console.warn("uncategorized title for:", title);
+          title = "Uncategorized";
+        }
 
         const owner =
           evt.owner?.header?.instances?.at(0)?.text ?? "unknown user";
@@ -118,8 +128,8 @@
         };
       });
 
-    // inefficient remap, to group better in future?
-    memoryEventsPerUser = validEvents.reduce((acc, val) => {
+    /** @type {EventDataMap} */
+    const eventsPerUser = validEvents.reduce((acc, val) => {
       if (!(val.owner in acc)) {
         acc[val.owner] = [];
       }
@@ -128,8 +138,38 @@
       return acc;
     }, /** @type {EventDataMap} */ ({}));
 
+    /** @type {EventDataMap} */
+    const groupedEvents = {};
+    Object.keys(eventsPerUser).forEach((owner) => {
+      groupedEvents[owner] = [];
+
+      eventsPerUser[owner].forEach((evt, idx) => {
+        // always fill first event
+        if (idx === 0) {
+          groupedEvents[owner].push({ ...evt });
+          return;
+        }
+
+        // check current grouped events
+        const currentOwnerEvents = groupedEvents[owner];
+        const prevEvt = currentOwnerEvents[currentOwnerEvents.length - 1];
+
+        // if the prev event is similar, replace the end date, and don't append
+        if (
+          prevEvt.endDate.getTime() === evt.startDate.getTime() &&
+          prevEvt.title === evt.title
+        ) {
+          prevEvt.endDate = evt.endDate;
+          return;
+        }
+
+        // else, always append
+        groupedEvents[owner].push({ ...evt });
+      });
+    });
+
     let fullText = [];
-    Object.entries(memoryEventsPerUser).map(([owner, events]) => {
+    Object.entries(groupedEvents).map(([owner, events]) => {
       fullText = fullText.concat([
         `## ${owner}`,
         "",
@@ -138,12 +178,24 @@
       ]);
 
       events.forEach((evt) => {
-        const startDate = evt.startDate.toLocaleDateString("en-MY", {
+        const startDateStr = evt.startDate.toLocaleDateString("en-MY", {
           day: "2-digit",
           month: "short",
         });
 
-        fullText.push(`| ${owner} | ${evt.title} | ${startDate} |`);
+        const endDate = new Date(evt.endDate);
+        endDate.setDate(endDate.getDate() - 1);
+        const endDateStr = endDate.toLocaleDateString("en-MY", {
+          day: "2-digit",
+          month: "short",
+        });
+
+        let dateStr = `${startDateStr} - ${endDateStr}`;
+        if (startDateStr === endDateStr) {
+          dateStr = startDateStr;
+        }
+
+        fullText.push(`| ${owner} | ${evt.title} | ${dateStr} |`);
       });
 
       fullText.push("");
